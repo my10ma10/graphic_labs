@@ -7,7 +7,7 @@
 #include <sstream>
 
 static const int WIDTH = 25;
-static const int HEIGHT = 15;
+static const int HEIGHT = 20;
 
 
 class Drawer {

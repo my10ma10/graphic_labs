@@ -7,9 +7,6 @@ void Drawer::putPixel(int x, int y) {
     if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
         screen[y][x] = '*';
     }
-    else {
-        throw std::logic_error("Array boundaries error");
-    }
 }
 
 
@@ -79,12 +76,12 @@ void LineDrawer::drawLineV(int x0, int y0, int x1, int y1) {
 
     if (dy == 0) return;
     
-    
+
     int x = x0;
     int p = 2*dx - dy;
     
     for (int i = 0; i < dy + 1; ++i) {
-        putPixel(y0 + i, x);
+        putPixel(x, y0 + i);
         if (p >= 0) {
             x += direction;
             p = p - 2*dy;
@@ -92,7 +89,6 @@ void LineDrawer::drawLineV(int x0, int y0, int x1, int y1) {
         p = p + 2*dx;
     }
 }
-
 void CircleDrawer::draw(int x0, int y0, int radius) {
     if (radius < 0) return;
 
