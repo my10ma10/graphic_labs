@@ -98,16 +98,16 @@ void CircleDrawer::draw(int x0, int y0, int radius) {
 
     int x = 0;
     int y = radius;
-    int d = 1 - radius; // decision 
+    int d = 1 - radius;
 
     drawCirclePoints(x0, y0, x, y);
 
     while (x < y) {
         x++;
-        if (d < 0) { // точка внутри окружности
+        if (d < 0) {
             d += 2 * x + 1;
         } 
-        else {// точка снаружи или на границе
+        else {
             y--;
             d += 2 * (x - y) + 1;
         }
@@ -137,20 +137,20 @@ void TriangleDrawer::drawEdge(int x0, int y0, int x1, int y1) {
     dx = std::abs(dx);
     dy = std::abs(dy);
     
-    int err = (dx > dy) ? dx / 2 : -dy / 2;
+    int des = (dx > dy) ? dx / 2 : -dy / 2;
     
     while (true) {
         putPixel(x0, y0);
         
         if (x0 == x1 && y0 == y1) break;
         
-        int e2 = err;
-        if (e2 > -dx) {
-            err -= dy;
+        int des2 = des;
+        if (des2 > -dx) {
+            des -= dy;
             x0 += dirX;
         }
-        if (e2 < dy) {
-            err += dx;
+        if (des2 < dy) {
+            des += dx;
             y0 += dirY;
         }
     }
