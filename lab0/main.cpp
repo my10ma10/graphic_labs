@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <unistd.h>
 
 #include "drawers.hpp"
 
@@ -22,51 +23,58 @@ int main(int argc, char* argv[]) {
     }
 
     const std::string filename = argv[1];
-    std::ifstream file(filename);
-    
-    if (!file.is_open()) {
-        std::cerr << "Error: cannot open file '" << filename << "'\n";
-        return 1;
-    }
-
-    std::string firstLine = getNextValidLine(file);
-    if (firstLine.empty()) {
-        std::cerr << "Error: file is empty or has no valid first line\n";
-        return 1;
-    }
-    
-    int shapesCount = std::stoi(firstLine);
     
     try {
-        for (int i = 0; i < shapesCount; ++i) {
-            std::string line = getNextValidLine(file);
-            if (line.empty()) {
-                std::cerr << "Error: unexpected end of file at shape #" << (i + 1) << "\n";
+        while (true) {
+            std::ifstream file(filename);
+            
+            if (!file.is_open()) {
+                std::cerr << "Error: cannot open file '" << filename << "'\n";
+                return 1;
+            }
+
+            std::string firstLine = getNextValidLine(file);
+            if (firstLine.empty()) {
+                std::cerr << "Error: file is empty or has no valid first line\n";
                 return 1;
             }
             
-            std::vector<int> coords = parseLineToInts(line);
-            
-            Drawer::clearScreen();
-            std::cout << "\nDrawing shape #" << (i + 1) << "...\n";
-            
-            if (coords.size() == 4) {
-                LineDrawer::draw(coords[0], coords[1], coords[2], coords[3]);
-            } 
-            else if (coords.size() == 3) {
-                CircleDrawer::draw(coords[0], coords[1], coords[2]);
-            } 
-            else if (coords.size() == 6) {
-                TriangleDrawer::draw(coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
-            } 
-            else {
-                std::cerr << "Warning: shape #" << (i + 1) << " has " << coords.size() 
-                          << " coordinates (expected 3, 4, or 6), skipping\n";
-                continue;
+            int shapesCount = std::stoi(firstLine);
+    
+            for (int i = 0; i < shapesCount; ++i) {
+                std::string line = getNextValidLine(file);
+                if (line.empty()) {
+                    std::cerr << "Error: unexpected end of file at shape #" << (i + 1) << "\n";
+                    return 1;
+                }
+                
+                std::vector<int> coords = parseLineToInts(line);
+                
+                Drawer::clearScreen();
+                std::cout << "\nDrawing shape #" << (i + 1) << "...\n";
+                
+                if (coords.size() == 4) {
+                    LineDrawer::draw(coords[0], coords[1], coords[2], coords[3]);
+                    sleep(1);
+                } 
+                else if (coords.size() == 3) {
+                    CircleDrawer::draw(coords[0], coords[1], coords[2]);
+                    sleep(1);
+                } 
+                else if (coords.size() == 6) {
+                    TriangleDrawer::draw(coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]);
+                    sleep(1);
+                } 
+                else {
+                    std::cerr << "Warning: shape #" << (i + 1) << " has " << coords.size() 
+                            << " coordinates (expected 3, 4, or 6), skipping\n";
+                    continue;
+                }
+                
+                Drawer::drawScreen();
+                Drawer::clearScreen();
             }
-            
-            Drawer::drawScreen();
-            Drawer::clearScreen();
+            file.close();
         }
     }
     catch (const std::runtime_error& err) {
@@ -74,7 +82,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
-    file.close();
     return 0;
 }
 

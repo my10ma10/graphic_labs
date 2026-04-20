@@ -13,4 +13,4 @@ drawers.o: drawers.cpp drawers.hpp
 	
 
 clean:
-	rm -f main *.o
+	rm -f main drawers *.o
