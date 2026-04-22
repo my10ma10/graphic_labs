@@ -30,15 +30,22 @@ void initStars() {
     }
 }
 
-void drawCircle(float cx, float cy, float r) {
+void drawEllipse(float cx, float cy, float rx, float ry) {
     glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(cx, cy);
+    glVertex2f(cx, cy); // set center
+
     for (int i = 0; i <= 100; i++) {
         float a = 2 * M_PI * i / 100;
-        glVertex2f(cx + cos(a) * r, cy + sin(a) * r);
+        
+        glVertex2f(cx + cos(a) * rx, cy + sin(a) * ry);
     }
     glEnd();
 }
+
+void drawCircle(float cx, float cy, float r) {
+    drawEllipse(cx, cy, r, r);
+}
+
 
 void drawStars() {
     std::vector<GLfloat> data;
@@ -103,24 +110,21 @@ void drawHouse() {
     drawCircle(0.03f, -0.38f, 0.01f);
 }
 
+
 void drawTree(float x) {
-    glEnableClientState(GL_VERTEX_ARRAY);
-
-    GLfloat trunk[] = {
-        x - 0.02f, -0.5f,
-        x + 0.02f, -0.5f,
-        x + 0.02f, -0.2f,
-        x - 0.02f, -0.2f
-    };
-
     glColor3f(0.4f, 0.2f, 0.1f);
-    glVertexPointer(2, GL_FLOAT, 0, trunk);
-    glDrawArrays(GL_QUADS, 0, 4);
+    
+    glBegin(GL_QUADS);
+    glVertex2f(x - 0.02f, -0.5f);
+    glVertex2f(x + 0.02f, -0.5f);
+    glVertex2f(x + 0.02f, -0.2f);
+    glVertex2f(x - 0.02f, -0.2f);
+    glEnd();
 
-    glDisableClientState(GL_VERTEX_ARRAY);
     glColor3f(0.0f, 0.6f, 0.0f);
-    drawCircle(x, -0.1f, 0.1f);
+    drawEllipse(x, -0.1f, 0.1f, 0.20f);
 }
+
 
 void drawGround() {
     GLfloat ground[] = {
@@ -159,8 +163,10 @@ void display() {
 
     drawGround();
     drawHouse();
-    drawTree(-0.6f);
-    drawTree(0.6f);
+    drawTree(-0.5f);
+    drawTree(0.5f);
+    drawTree(-0.8f);
+    drawTree(0.8f);
 
     float x = -cos(angle) * 1.2f;
     float y = sin(angle) * 0.8f;
