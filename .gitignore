@@ -2,3 +2,5 @@ main
 *.out
 *.o
 .txt
+*.bmp*
+*.png*
